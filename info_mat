@@ -1,0 +1,49 @@
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class OccuranceCount {
+   
+    public static void main(String[] args) {
+        String fileA = "path/to/fileA.txt";
+        String fileB = "path/to/fileB.txt";
+        String fileC = "path/to/fileC.txt";
+       
+        try {
+            Map<String, Integer> countB = countOccurrences(fileB, fileA);
+            Map<String, Integer> countC = countOccurrences(fileC, fileA);
+           
+            for (String lineA : countB.keySet()) {
+                System.out.println(lineA + ":\nFile B: " + countB.get(lineA) + "\nFile C: " + countC.get(lineA) + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+    }
+   
+    private static Map<String, Integer> countOccurrences(String filename, String searchFilename) throws IOException {
+        BufferedReader searchReader = new BufferedReader(new FileReader(searchFilename));
+        Map<String, Integer> counts = new HashMap<>();
+        String line;
+        while ((line = searchReader.readLine()) != null) {
+            counts.put(line, 0);
+        }
+        searchReader.close();
+       
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        while ((line = reader.readLine()) != null) {
+            for (String searchStr : counts.keySet()) {
+                int count = counts.get(searchStr);
+                count += (line.split(searchStr, -1).length - 1);
+                counts.put(searchStr, count);
+            }
+        }
+        reader.close();
+        return counts;
+    }
+}
