@@ -2,11 +2,16 @@ function removeDuplicates(inputString) {
     // Split the input string into an array of strings
     var stringArray = inputString.split(',');
 
-    // Use a Set to store unique strings
-    var uniqueStringsSet = new Set(stringArray);
+    // Use an object to keep track of unique strings
+    var uniqueStringsObj = {};
 
-    // Convert the Set back to an array
-    var uniqueStringsArray = Array.from(uniqueStringsSet);
+    // Loop through the array and add each string to the object
+    for (var i = 0; i < stringArray.length; i++) {
+        uniqueStringsObj[stringArray[i]] = true;
+    }
+
+    // Extract unique strings from the object keys
+    var uniqueStringsArray = Object.keys(uniqueStringsObj);
 
     // Join the array back into a string with commas
     var resultString = uniqueStringsArray.join(',');
@@ -19,3 +24,4 @@ var string_a = "apple,mango,apple,mango,carrot";
 var string_b = removeDuplicates(string_a);
 console.log(string_b);
 // Output: apple,mango,carrot
+
