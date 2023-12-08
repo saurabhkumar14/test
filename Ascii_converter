@@ -1,0 +1,16 @@
+function replaceSpecialCharacters(inputString) {
+    // Use a regular expression to match special characters and replace them
+    var replacedString = inputString.replace(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/g, function(match) {
+        // Replace each special character with its ASCII value
+        return "%" + match.charCodeAt(0).toString(16).toUpperCase();
+    });
+
+    return replacedString;
+}
+
+// Example usage:
+var originalString = "Hello#World!";
+var modifiedString = replaceSpecialCharacters(originalString);
+
+console.log(modifiedString);
+// Output: Hello%23World%21
