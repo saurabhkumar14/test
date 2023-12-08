@@ -1,0 +1,14 @@
+// Replace 'https://example.com' with the actual URL you want to hit
+var url = 'https://example.com';
+
+// Create a new GlideHTTPRequest object
+var request = new GlideHTTPRequest(url);
+
+// Set the request method to GET
+request.setHttpMethod('get');
+
+// Send the request and get the response
+var response = request.send();
+
+// Log the response body
+gs.info('Response Body: ' + response.getBody());
