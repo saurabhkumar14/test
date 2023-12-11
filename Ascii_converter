@@ -14,3 +14,27 @@ var modifiedString = replaceSpecialCharacters(originalString);
 
 console.log(modifiedString);
 // Output: Hello%23World%21
+	$scope.canSubmit = function() {
+	
+		if(c.data.selectedTypeValue == 'individual' && !!c.data.enteredDate && c.draftEntryAvailable){
+			c.showSubmitBtn = false;
+			return false;
+		}
+		else if( !!c.data.enteredDate && 
+						c.data.selectedTypeValue == 'group' && 
+            c.draftEntryAvailable &&
+						!!c.data.group && 
+						$scope.volunteer.value != '' &&
+						(!!$scope.workActivity.displayValue) &&
+						($scope.example.t1 !== 0 ||$scope.example.t1 > 24 || $scope.example.t2 !== 0 ||$scope.example.t2 > 0 || $scope.example.t3 !== 0 || $scope.example.t4 !== 0 || $scope.example.t5 !== 0 || $scope.example.t6 !== 0 || $scope.example.t7 !== 0 ) 
+						//($scope.example.t1 < 24 || $scope.example.t2 < 24 || $scope.example.t3 < 24 || $scope.example.t4 < 24 || $scope.example.t5 < 24 || $scope.example.t6 < 24 || $scope.example.t7 < 24)
+						
+					 ){
+			return false;
+		} else {
+			c.showSubmitBtn = false;
+		}
+
+		return 'true';
+
+	}
