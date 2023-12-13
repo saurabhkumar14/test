@@ -1,16 +1,37 @@
-(function refineQuery(current, parent) {
-    // SAM use case
-    if (GlidePluginManager.isActive("com.snc.sams")) {
-        current.addQuery("norm_product", parent.product);
-    } else {
-        current.addQuery("publisher", parent.manufacturer);
-        current.addQuery("product_name", parent.name);
+function isJSONValid(jsonObj) {
+  for (var key in jsonObj) {
+    if (jsonObj.hasOwnProperty(key)) {
+      // Validate specific fields
+     if (key === 'displayValue' && (typeof jsonObj[key] !== 'string' || jsonObj[key].trim() === '')) {
+        return false; // Name is required and must be a non-empty string
+			 
+      }
+
+     // if ((key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7') && (typeof jsonObj[key] !== 'number' || isNaN(jsonObj[key])||(jsonObj[key])===0)) {
+      if ((key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7') && (typeof jsonObj[key] !== 'number' )) {  
+			return false; // Zip must be a number
+				
+      }
+			
+			if (key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7'){
+				
+				var sumOfValues = ['t1', 't2', 't3', 't4','t5','t6','t7'].reduce((acc, currentKey) => acc + (jsonObj[currentKey] || 0), 0);
+				console.log('sumOfValues : '+sumOfValues);
+				if(sumOfValues <= 0){
+					return false;
+				}
+				
+			}
+
+      // Recursively validate nested objects
+      if (typeof jsonObj[key] === 'object' && !Array.isArray(jsonObj[key])) {
+        if (!isJSONValid(jsonObj[key])) {
+          return false;
+					
+        }
+      }
     }
-
-	SamLifeCycleUtils.queryVersionAndEdition(current, parent);
-
-    current.orderBy("norm_version");
-    current.orderBy("norm_full_version");
-    current.orderBy("start_date");
-
-})(current, parent);
+  }
+  return true;
+	
+}
