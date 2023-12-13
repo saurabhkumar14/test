@@ -1,40 +1,16 @@
-function replaceSpecialCharacters(inputString) {
-    // Use a regular expression to match special characters and replace them
-    var replacedString = inputString.replace(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/g, function(match) {
-        // Replace each special character with its ASCII value
-        return "%" + match.charCodeAt(0).toString(16).toUpperCase();
-    });
+(function refineQuery(current, parent) {
+    // SAM use case
+    if (GlidePluginManager.isActive("com.snc.sams")) {
+        current.addQuery("norm_product", parent.product);
+    } else {
+        current.addQuery("publisher", parent.manufacturer);
+        current.addQuery("product_name", parent.name);
+    }
 
-    return replacedString;
-}
+	SamLifeCycleUtils.queryVersionAndEdition(current, parent);
 
-// Example usage:
-var originalString = "Hello#World!";
-var modifiedString = replaceSpecialCharacters(originalString);
+    current.orderBy("norm_version");
+    current.orderBy("norm_full_version");
+    current.orderBy("start_date");
 
-console.log(modifiedString);
-// Output: Hello%23World%21
-	$scope.canSubmit = function() {
-	
-		if(c.data.selectedTypeValue == 'individual' && !!c.data.enteredDate && c.draftEntryAvailable){
-			c.showSubmitBtn = false;
-			return false;
-		}
-		else if( !!c.data.enteredDate && 
-						c.data.selectedTypeValue == 'group' && 
-            c.draftEntryAvailable &&
-						!!c.data.group && 
-						$scope.volunteer.value != '' &&
-						(!!$scope.workActivity.displayValue) &&
-						($scope.example.t1 !== 0 ||$scope.example.t1 > 24 || $scope.example.t2 !== 0 ||$scope.example.t2 > 0 || $scope.example.t3 !== 0 || $scope.example.t4 !== 0 || $scope.example.t5 !== 0 || $scope.example.t6 !== 0 || $scope.example.t7 !== 0 ) 
-						//($scope.example.t1 < 24 || $scope.example.t2 < 24 || $scope.example.t3 < 24 || $scope.example.t4 < 24 || $scope.example.t5 < 24 || $scope.example.t6 < 24 || $scope.example.t7 < 24)
-						
-					 ){
-			return false;
-		} else {
-			c.showSubmitBtn = false;
-		}
-
-		return 'true';
-
-	}
+})(current, parent);
