@@ -1,27 +1,32 @@
-function removeDuplicates(inputString) {
-    // Split the input string into an array of strings
-    var stringArray = inputString.split(',');
+function isJSONValid(jsonObj) {
+  for (var key in jsonObj) {
+    if (jsonObj.hasOwnProperty(key)) {
+      // Validate specific fields
+      if (key === 'displayValue' && (typeof jsonObj[key] !== 'string' || jsonObj[key].trim() === '')) {
+        return false; // Name is required and must be a non-empty string
+      }
 
-    // Use an object to keep track of unique strings
-    var uniqueStringsObj = {};
+      if ((key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7') && (typeof jsonObj[key] !== 'number' )) {  
+        return false; // Zip must be a number
+      }
 
-    // Loop through the array and add each string to the object
-    for (var i = 0; i < stringArray.length; i++) {
-        uniqueStringsObj[stringArray[i]] = true;
+      if (key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7'){
+        var sumOfValues = ['t1', 't2', 't3', 't4','t5','t6','t7'].reduce(function(acc, currentKey) {
+          return acc + (jsonObj[currentKey] || 0);
+        }, 0);
+        console.log('sumOfValues : '+sumOfValues);
+        if (sumOfValues <= 0) {
+          return false;
+        }
+      }
+
+      // Recursively validate nested objects
+      if (typeof jsonObj[key] === 'object' && !Array.isArray(jsonObj[key])) {
+        if (!isJSONValid(jsonObj[key])) {
+          return false;
+        }
+      }
     }
-
-    // Extract unique strings from the object keys
-    var uniqueStringsArray = Object.keys(uniqueStringsObj);
-
-    // Join the array back into a string with commas
-    var resultString = uniqueStringsArray.join(',');
-
-    return resultString;
+  }
+  return true;
 }
-
-// Example usage:
-var string_a = "apple,mango,apple,mango,carrot";
-var string_b = removeDuplicates(string_a);
-console.log(string_b);
-// Output: apple,mango,carrot
-
