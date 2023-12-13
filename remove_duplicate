@@ -30,3 +30,11 @@ function isJSONValid(jsonObj) {
   }
   return true;
 }
+
+
+/*
+var sumOfValues = ['t1', 't2', 't3', 't4', 't5', 't6', 't7'].reduce(function(acc, currentKey) {
+  return acc + (jsonObj[currentKey] || 0);
+}, 0);
+
+*/
