@@ -1,40 +1,32 @@
-function isJSONValid(jsonObj) {
-  for (var key in jsonObj) {
-    if (jsonObj.hasOwnProperty(key)) {
-      // Validate specific fields
-      if (key === 'displayValue' && (typeof jsonObj[key] !== 'string' || jsonObj[key].trim() === '')) {
-        return false; // Name is required and must be a non-empty string
-      }
+#!/bin/bash
 
-      if ((key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7') && (typeof jsonObj[key] !== 'number' )) {  
-        return false; // Zip must be a number
-      }
+log_directory="/path/to/log/files"
+start_date="11/01"
+end_date="12/17"
 
-      if (key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7'){
-        var sumOfValues = ['t1', 't2', 't3', 't4','t5','t6','t7'].reduce(function(acc, currentKey) {
-          return acc + (jsonObj[currentKey] || 0);
-        }, 0);
-        console.log('sumOfValues : '+sumOfValues);
-        if (sumOfValues <= 0) {
-          return false;
+# Use awk to extract date and filter lines containing "FEP", "ELS", or "EPS"
+awk -v start="$start_date" -v end="$end_date" '
+    BEGIN { els_count = 0; eps_count = 0; }
+
+    function process_entry(entry) {
+        match(entry, /[0-9]{2}\/[0-9]{2}\/[0-9]{2}/);
+        log_date = substr(entry, RSTART, RLENGTH);
+        if (log_date >= start && log_date <= end) {
+            print log_date, entry;
+            if (entry ~ /ELS/) {
+                els_count++;
+            } else if (entry ~ /EPS/) {
+                eps_count++;
+            }
         }
-      }
-
-      // Recursively validate nested objects
-      if (typeof jsonObj[key] === 'object' && !Array.isArray(jsonObj[key])) {
-        if (!isJSONValid(jsonObj[key])) {
-          return false;
-        }
-      }
     }
-  }
-  return true;
-}
 
+    FNR == 1 { current_file = FILENAME; }
 
-/*
-var sumOfValues = ['t1', 't2', 't3', 't4', 't5', 't6', 't7'].reduce(function(acc, currentKey) {
-  return acc + (jsonObj[currentKey] || 0);
-}, 0);
+    /(FEP|ELS|EPS)/ { process_entry($0); }
 
-*/
+    END {
+        print "ELS count:", els_count;
+        print "EPS count:", eps_count;
+    }
+' $log_directory/EPPPS.log*
