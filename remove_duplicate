@@ -55,3 +55,8 @@ echo -e "$csv_data"
 
 echo "$input" | awk 'BEGIN {ORS=","} {if ($0 != "ZZ") {if (NR%3==0) {print ""; } else {print}}}'
 
+------------------------------------
+--------------------------------------
+echo "$input" | awk 'BEGIN {ORS=","} {if ($0 != "ZZ") {if (NR%3==0) {print ""; } else {print}}} END {print ""}' | while IFS=',' read -r name value; do
+  echo "$name,$value"
+done
