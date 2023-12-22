@@ -1,32 +1,8 @@
-#!/bin/bash
-
-log_directory="/path/to/log/files"
-start_date="11/01"
-end_date="12/17"
-
-# Use awk to extract date and filter lines containing "FEP", "ELS", or "EPS"
-awk -v start="$start_date" -v end="$end_date" '
-    BEGIN { els_count = 0; eps_count = 0; }
-
-    function process_entry(entry) {
-        match(entry, /[0-9]{2}\/[0-9]{2}\/[0-9]{2}/);
-        log_date = substr(entry, RSTART, RLENGTH);
-        if (log_date >= start && log_date <= end) {
-            print log_date, entry;
-            if (entry ~ /ELS/) {
-                els_count++;
-            } else if (entry ~ /EPS/) {
-                eps_count++;
-            }
-        }
-    }
-
-    FNR == 1 { current_file = FILENAME; }
-
-    /(FEP|ELS|EPS)/ { process_entry($0); }
-
-    END {
-        print "ELS count:", els_count;
-        print "EPS count:", eps_count;
-    }
-' $log_directory/EPPPS.log*
+2023/12/09 00:01:41.952 INFO   claimsPricer(PricerConnectorServiceImpl.java:124) - AEPS Request -> {
+  "AnthemEnterprisePricingRequest" : {
+    "counters" : [ {
+      "diagnosisCodeCounter" : 3.0,
+      "lineCounter" : 3.0
+    } ],
+    "claimNumber" : "3343800318000",
+    "sourceSystemIndicator" : "VAC",
