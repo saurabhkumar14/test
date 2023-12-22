@@ -22,3 +22,11 @@ tail -n +7 | \
 awk -F'[:,]' '{gsub(/[[:space:]"{}]/, ""); print $10 "," $14}' > "$CSV_FILE"
 
 echo "CSV file created: $CSV_FILE"
+
+
+
+
+
+
+
+csv_data=$(echo "$data" | awk '/^--$/ {next} {ORS = (NR % 2 == 0) ? "\n" : ","; print $0}')
