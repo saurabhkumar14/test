@@ -30,3 +30,16 @@ echo "CSV file created: $CSV_FILE"
 
 
 csv_data=$(echo "$data" | awk '/^--$/ {next} {ORS = (NR % 2 == 0) ? "\n" : ","; print $0}')
+
+
+
+#!/bin/bash
+
+# Input data from file
+data=$(cat log_as.txt)
+
+# Convert to CSV
+csv_data=$(echo "$data" | awk '/^--$/ {next} {ORS = (NR % 2 == 0) ? "\n" : ","; print $0}' | sed 's/_/,/')
+
+# Print CSV data
+echo -e "$csv_data"
