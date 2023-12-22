@@ -57,6 +57,13 @@ echo "$input" | awk 'BEGIN {ORS=","} {if ($0 != "ZZ") {if (NR%3==0) {print ""; }
 
 ------------------------------------
 --------------------------------------
-echo "$input" | awk 'BEGIN {ORS=","} {if ($0 != "ZZ") {if (NR%3==0) {print ""; } else {print}}} END {print ""}' | while IFS=',' read -r name value; do
+#!/bin/bash
+
+# Input file
+input_file="input.txt"
+
+# Use awk to filter out lines containing "ZZ" and format the output
+awk 'BEGIN {ORS=","} {if ($0 != "ZZ") {if (NR%3==0) {print ""; } else {print}}} END {print ""}' "$input_file" | while IFS=',' read -r name value; do
   echo "$name,$value"
 done
+
