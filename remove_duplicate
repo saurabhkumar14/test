@@ -6,3 +6,19 @@
     } ],
     "claimNumber" : "3343800318000",
     "sourceSystemIndicator" : "VAC",
+
+
+#!/bin/bash
+
+# Input log file
+LOG_FILE="your_log_file.txt"
+
+# Output CSV file
+CSV_FILE="output.csv"
+
+# Extract sourceSystemIndicator and claimNumber from logs and create CSV
+grep -Eo -A 7 '^[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}.*"claimNumber" : "[0-9]+".*"sourceSystemIndicator" : "[A-Z]+"$' "$LOG_FILE" | \
+tail -n +7 | \
+awk -F'[:,]' '{gsub(/[[:space:]"{}]/, ""); print $10 "," $14}' > "$CSV_FILE"
+
+echo "CSV file created: $CSV_FILE"
