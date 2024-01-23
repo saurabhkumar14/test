@@ -1,37 +1,40 @@
-function isJSONValid(jsonObj) {
-  for (var key in jsonObj) {
-    if (jsonObj.hasOwnProperty(key)) {
-      // Validate specific fields
-     if (key === 'displayValue' && (typeof jsonObj[key] !== 'string' || jsonObj[key].trim() === '')) {
-        return false; // Name is required and must be a non-empty string
-			 
-      }
+var latest_review = [];
+        var latest_review_name = [];
+        var review_period = new GlideRecord('x_g_fpa_taco_taco_review_period');
+        review_period.addEncodedQuery('review_period_state=closed');
+        review_period.orderByDesc('sys_created_on');
+        review_period.setLimit(2);
+        review_period.query();
+        while (review_period.next()) {
+            latest_review.push(review_period.sys_id);
+            latest_review_name.push(review_period.review_period_name);
+        
+        gs.info('Review Period' + latest_review);
+        gs.info('Review Period Name' + latest_review_name);
 
-     // if ((key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7') && (typeof jsonObj[key] !== 'number' || isNaN(jsonObj[key])||(jsonObj[key])===0)) {
-      if ((key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7') && (typeof jsonObj[key] !== 'number' )) {  
-			return false; // Zip must be a number
-				
-      }
-			
-			if (key === 't1' || key === 't2'|| key === 't3'|| key === 't4'|| key === 't5'|| key === 't6'|| key === 't7'){
-				
-				var sumOfValues = ['t1', 't2', 't3', 't4','t5','t6','t7'].reduce((acc, currentKey) => acc + (jsonObj[currentKey] || 0), 0);
-				console.log('sumOfValues : '+sumOfValues);
-				if(sumOfValues <= 0){
-					return false;
-				}
-				
-			}
-
-      // Recursively validate nested objects
-      if (typeof jsonObj[key] === 'object' && !Array.isArray(jsonObj[key])) {
-        if (!isJSONValid(jsonObj[key])) {
-          return false;
-					
         }
-      }
-    }
-  }
-  return true;
-	
-}
+
+        //gs.info('Review Period' + latest_review);
+        //gs.info('Review Period Name' + latest_review_name);
+        var count = '';
+var glis_deter='';
+var taco_obligation='';
+
+        for (var i = 0; i <= latest_review_name.length; i++) {
+//review_period.review_period_name=Test Review Pariod VK
+            var cert = new GlideAggregate('x_g_fpa_taco_taco_certification_table');
+           //cert.addEncodedQuery('review_period.review_period_name=' + latest_review_name[i]);
+            cert.addEncodedQuery('review_period.review_period_name=' + 'Test Review Pariod VK');
+           // cert.addAggregate('COUNT');
+            //cert.groupBy('taco_obligation.number');
+//cert.groupBy('region');
+            cert.query();
+            while (cert.next()) {
+            glis_deter=cert.final_response;
+taco_obligation=cert.taco_obligation.number;
+             count = cert.getRowCount();
+gs.info('glis_deter'+glis_deter);
+ gs.info("Incidents category {0} had {1} average modifications" , [taco_obligation, glis_deter]);
+           }
+gs.info('count'+count);
+        }
