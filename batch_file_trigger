@@ -1,0 +1,15 @@
+cd "\Program Files\SmartBear\SoapUI-5.4.0\bin\"
+call testrunner.bat "C:\EPPS_SOAP_Automation_NewIP\DEV\EPPS-SOAP-soapui-project_DevNewIP.xml"
+cd "\Program Files\SmartBear\SoapUI-5.4.0\bin\"
+call testrunner.bat "C:\EPPS_SOAP_Automation_NewIP\DEV\Soap-Framework-Mail-soapui-project_DevNewIP.xml"
+timeout 2
+cd "\Program Files\SmartBear\SoapUI-5.4.0\bin\"
+call testrunner.bat "C:\EPPS_SOAP_Automation_NewIP\SIT\Soap_Framework_SIT-soapui-project.xml"
+cd "\Program Files\SmartBear\SoapUI-5.4.0\bin\"
+call testrunner.bat "C:\EPPS_SOAP_Automation_NewIP\SIT\Soap-Framework-Mail-soapui-project_SIT.xml"
+timeout 2
+cd "\Program Files\SmartBear\SoapUI-5.4.0\bin\"
+call testrunner.bat "C:\EPPS_SOAP_Automation_NewIP\UAT\Soap_Framework_UAT-soapui-project.xml"
+cd "\Program Files\SmartBear\SoapUI-5.4.0\bin\"
+call testrunner.bat "C:\EPPS_SOAP_Automation_NewIP\UAT\Soap-Framework-Mail-soapui-project_UAT.xml"
+timeout 2
