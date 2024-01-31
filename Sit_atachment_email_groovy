@@ -1,0 +1,148 @@
+import org.apache.commons.io.FileUtils
+import java.nio.file.Files
+import javax.activation.CommandMap;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.activation.MailcapCommandMap;
+import javax.mail.*;
+import java.io.*;
+import javax.mail.internet.*;
+import javax.mail.Session;
+import javax.mail.Transport;
+import java.nio.file.Files
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+
+def dataFolder =  new com.eviware.soapui.support.GroovyUtils(context).projectPath
+def currentDate=new Date().format("dd-MMM-yyyy")
+def d_hm= new Date().format("dd-MMM-yyyy-HH-mm")
+def sourceFile=new File(dataFolder+"/SoapUIResults_SIT_NEW/HTML Reports/HTML_Report_"+currentDate+".html")
+
+def targetDir=new File("Z:/Saurabh_Kumar/Health_Check_Daily_logs/SIT_NEW/HTML_Reports/HTML_Report_"+d_hm+".html")
+FileUtils.copyFile(sourceFile, targetDir)
+sleep(5000)
+
+
+//------------
+def folderPath =  dataFolder+"/SoapUIResults_SIT_NEW/Summary_Report/Summary_Report_"+currentDate+".txt"
+
+boolean debug = false;
+ String subject="EPPS_SIT_NEW_Server_Health_Check_Status";
+ // For fetching PASS or FAIL status from DEV_Testreport.txt
+Properties properties = new Properties()
+File propertiesFile = new File(folderPath)
+propertiesFile.withInputStream {
+    properties.load(it)
+}
+
+//int failCount =0;
+def failCount = properties.Test_suites_failed;
+println("fail count value is :"+failCount);
+
+String Pass_message="<html xmlns:v=\"urn:schemas-microsoft-com:vml\"xmlns:o=\"urn:schemas-microsoft-com:office:office\"xmlns:w=\"urn:schemas-microsoft-com:office:word\"xmlns:m=\"http://schemas.microsoft.com/office/2004/12/omml\"xmlns=\"http://www.w3.org/TR/REC-html40\"><head><meta http-equiv= \"Content-Type\" content=\"text/html; charset=Windows-1252\"><meta name=\"Generator\" content=\"Microsoft Word 15 (filtered medium)\"><style><!-- @font-face{font-family:Helvetica;panose-1:21164222224;}@font-face{font-family: \"CambriaMath\";panose-1:2453546324;}@font-face{font-family: Calibri;panose-1:21552224324;}/*StyleDefinitions*/p.MsoNormal,li.MsoNormal,div.MsoNormal{margin:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}a:link,span.MsoHyperlink{ mso-style-priority: 99;color:#C10563;text-decoration:underline;}p.MsoNoSpacing,li.MsoNoSpacing,div.MsoNoSpacing{ mso-style-priority: 1; mso-margin-top-alt : auto; margin-right:0cm; mso-margin-bottom-alt : auto; margin-left:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}p.MsoListParagraph,li.MsoListParagraph,div.MsoListParagraph{mso-style-priority:34;mso-margin-top-alt:auto;margin-right:0cm;mso-margin-bottom-alt:auto;margin-left:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}span.EmailStyle17{mso-style-type:personal-compose;font-family:\"Calibri\",sans-serif;color:windowtext;}p.color-white,li.color-white,div.color-white{mso-style-name:color-white;mso-margin-top-alt:auto;margin-right:0cm;mso-margin-bottom-alt:auto;margin-left:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}.MsoChpDefault{mso-style-type:export-only;font-family:\"Calibri\",sans-serif;mso-fareast-language:EN-US;}@pageWordSection1{size:612.0pt792.0pt;margin:72.0pt72.0pt72.0pt72.0pt;}div.WordSection1{page:WordSection1;}--></style><!--[if gte mso 9]><xml><o:shapedefaults v:ext=\"edit\" spidmax=\"1026\" /></xml><![endif]--><!--[if gte mso 9]><xml><o:shapelayout v:ext=\"edit\"><o:idmap v:ext=\"edit\" data=\"1\" /></o:shapelayout></xml><![endif]--></head><body lang=\"EN-CA\" link=\"#C10563\" vlink=\"#C10563\"style=\"word-wrap: break-word\"><div class=\"WordSection1\"><p class=\"MsoNormal\" align=\"center\" style=\"text-align: center; line-height: 10.5pt; background: #0072B5\"><b><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: white\">Enterprise Provider Pricing System</span></b><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\" align=\"left\" style=\"text-align: left; line-height: 28.5pt; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">Hi Team,<br></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\" align=\"left\" style=\"margin-bottom: 9.0pt; text-align: left; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\"><br>Please find the <b>EPPS SIT_NEW (va10tlvwbs645 & va10tlvwbs646)</b> server validation status and HTML Report for reference :<br><br></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNoSpacing\" align=\"center\" style=\"margin: 0cm; text-align: left; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style= \"font-size: 12.0pt; color: black\">• EPPS SIT Services : <b><span style = 'background-color: green; color: white;'> GREEN <br><br><br></span></b></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNoSpacing\" align=\"center\" style=\"margin: 0cm; text-align: left; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\"><b><span style='background-color: cian; color: white;'><a href=\"file:////ntfs07.corp.anthem.com\\ISDshare/UNIX_Login\\Prov_Pricing\\Saurabh_Kumar\\Health_Check_Daily_logs\\SIT_NEW\\HTML_Reports\\HTML_Report_"+d_hm+".html\" style=\"color:#0072B5;\">Click here for HTML Report of today's validations</a><br><br><br><br></span></b></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"style=\"margin-bottom: 8.0pt; mso-line-height-alt: 11.55pt; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; text-align: start; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">Best regards,</span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"style=\"margin-bottom: 8.0pt; mso-line-height-alt: 11.55pt; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; text-align: start; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><b><span lang=\"EN-US\"style=\"font-size: 12.0pt; color: #242424; background: white\">Elevance Health</span></b><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">&nbsp;Enterprise Provider Pricing system </span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"style=\"margin-bottom: normal; font-variant-caps: normal; orphans: 2; text-align: start; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">Note : This is a system generated email. </span><span lang=\"EN-US\"style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"><span lang=\"EN-US\"><o:p>&nbsp;</o:p></span></p><p class=\"MsoNormal\"><o:p>&nbsp;</o:p></p></div></body></html>";
+
+String Fail_message="<html xmlns:v=\"urn:schemas-microsoft-com:vml\"xmlns:o=\"urn:schemas-microsoft-com:office:office\"xmlns:w=\"urn:schemas-microsoft-com:office:word\"xmlns:m=\"http://schemas.microsoft.com/office/2004/12/omml\"xmlns=\"http://www.w3.org/TR/REC-html40\"><head><meta http-equiv= \"Content-Type\" content=\"text/html; charset=Windows-1252\"><meta name=\"Generator\" content=\"Microsoft Word 15 (filtered medium)\"><style><!-- @font-face{font-family:Helvetica;panose-1:21164222224;}@font-face{font-family: \"CambriaMath\";panose-1:2453546324;}@font-face{font-family: Calibri;panose-1:21552224324;}/*StyleDefinitions*/p.MsoNormal,li.MsoNormal,div.MsoNormal{margin:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}a:link,span.MsoHyperlink{ mso-style-priority: 99;color:#C10563;text-decoration:underline;}p.MsoNoSpacing,li.MsoNoSpacing,div.MsoNoSpacing{ mso-style-priority: 1; mso-margin-top-alt : auto; margin-right:0cm; mso-margin-bottom-alt : auto; margin-left:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}p.MsoListParagraph,li.MsoListParagraph,div.MsoListParagraph{mso-style-priority:34;mso-margin-top-alt:auto;margin-right:0cm;mso-margin-bottom-alt:auto;margin-left:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}span.EmailStyle17{mso-style-type:personal-compose;font-family:\"Calibri\",sans-serif;color:windowtext;}p.color-white,li.color-white,div.color-white{mso-style-name:color-white;mso-margin-top-alt:auto;margin-right:0cm;mso-margin-bottom-alt:auto;margin-left:0cm;font-size:11.0pt;font-family:\"Calibri\",sans-serif;}.MsoChpDefault{mso-style-type:export-only;font-family:\"Calibri\",sans-serif;mso-fareast-language:EN-US;}@pageWordSection1{size:612.0pt792.0pt;margin:72.0pt72.0pt72.0pt72.0pt;}div.WordSection1{page:WordSection1;}--></style><!--[if gte mso 9]><xml><o:shapedefaults v:ext=\"edit\" spidmax=\"1026\" /></xml><![endif]--><!--[if gte mso 9]><xml><o:shapelayout v:ext=\"edit\"><o:idmap v:ext=\"edit\" data=\"1\" /></o:shapelayout></xml><![endif]--></head><body lang=\"EN-CA\" link=\"#C10563\" vlink=\"#C10563\"style=\"word-wrap: break-word\"><div class=\"WordSection1\"><p class=\"MsoNormal\" align=\"center\" style=\"text-align: center; line-height: 10.5pt; background: #0072B5\"><b><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: white\">Enterprise Provider Pricing System</span></b><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\" align=\"left\" style=\"text-align: left; line-height: 28.5pt; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">Hi Team,<br></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\" align=\"left\" style=\"margin-bottom: 9.0pt; text-align: left; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\"><br>Please find the <b>EPPS SIT_NEW (va10tlvwbs645 & va10tlvwbs646)</b> server validation status and HTML Report for reference :<br><br></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNoSpacing\" align=\"center\" style=\"margin: 0cm; text-align: left; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style= \"font-size: 12.0pt; color: black\">• EPPS SIT Services : <b><span style = 'background-color: red; color: white;'> RED <br><br><br></span></b></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNoSpacing\" align=\"center\" style=\"margin: 0cm; text-align: left; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\"><b><span style='background-color: cian; color: white;'><a href=\"file:////ntfs07.corp.anthem.com\\ISDshare\\UNIX_Login\\Prov_Pricing/Saurabh_Kumar\\Health_Check_Daily_logs\\SIT_NEW\\HTML_Reports\\HTML_Report_"+d_hm+".html\" style=\"color:#0072B5;\">Click here for HTML Report of today's validations</a><br><br><br><br></span></b></span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"style=\"margin-bottom: 8.0pt; mso-line-height-alt: 11.55pt; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; text-align: start; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">Best regards,</span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"style=\"margin-bottom: 8.0pt; mso-line-height-alt: 11.55pt; font-variant-ligatures: normal; font-variant-caps: normal; orphans: 2; text-align: start; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><b><span lang=\"EN-US\"style=\"font-size: 12.0pt; color: #242424; background: white\">Elevance Health</span></b><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">&nbsp;Enterprise Provider Pricing system </span><span lang=\"EN-US\" style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"style=\"margin-bottom: normal; font-variant-caps: normal; orphans: 2; text-align: start; widows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; word-spacing: 0px\"><span lang=\"EN-US\" style=\"font-size: 12.0pt; color: black\">Note : This is a system generated email. </span><span lang=\"EN-US\"style=\"color: black\"><o:p></o:p></span></p><p class=\"MsoNormal\"><span lang=\"EN-US\"><o:p>&nbsp;</o:p></span></p><p class=\"MsoNormal\"><o:p>&nbsp;</o:p></p></div></body></html>";
+ 
+// String from="EPPS_SIT_Services"
+String from="saurabh.kumar6@anthem.com"
+			//Set the host smtp address
+			Properties props = new Properties();
+			System.setProperty("java.net.preferIPv4Stack" , "true");
+			String smtp =  "mail.smtp.host,smtpinternal.wellpoint.com";
+			//String smtp_Port =  "mail.smtp.port,25";
+			props.put(smtp.split(",")[0],smtp.split(",")[1]);
+			 props.put("mail.transport.protocol", "smtp");
+		
+			Session session = Session.getDefaultInstance(props, null);
+			session.setDebug(debug);
+ 
+			// create a message
+			Message msg = new MimeMessage(session);
+
+			// set the from and to address
+			
+			InternetAddress addressFrom = new InternetAddress(from);
+			msg.setFrom(addressFrom);
+			addressTo = new InternetAddress("saurabh.kumar6@anthem.com");
+			//addressTo = new InternetAddress("dl-eppsnetworxitreadinessvalidation@anthem.com");
+			
+			msg.setRecipients(Message.RecipientType.TO, addressTo);
+
+			// Setting the Subject and Content Type
+			msg.setSubject(subject);
+			MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
+
+			/* Attach the result report excel if the e-mail is sent at then end of batch run.
+			 * The excel is attached iff there are failed testcases.
+			 * */
+			
+
+				// add handlers for main MIME types
+				mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+				mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+				mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+				mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+				mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+				CommandMap.setDefaultCommandMap(mc);
+
+				// create and fill the first message part
+				MimeBodyPart mbp1 = new MimeBodyPart();
+				if (failCount.equals('0'))
+				{
+				mbp1.setContent(Pass_message, "text/html");
+				mbp1.setContent(new String(Pass_message.toString().getBytes(), "iso-8859-1"), "text/html; charset=iso-8859-1");
+				}
+				else
+				{
+                    mbp1.setContent(Fail_message, "text/html");
+				mbp1.setContent(new String(Fail_message.toString().getBytes(), "iso-8859-1"), "text/html; charset=iso-8859-1");
+				}
+				mbp1.setHeader("MIME-Version" , "1.0" );     
+				//mbp1.setHeader("Content-Type" , mbp1.getContentType() );
+				//mbp1.setText(message);
+
+				// create the second message part
+				/*MimeBodyPart mbp2 = new MimeBodyPart();
+				MimeBodyPart mbp3 = new MimeBodyPart();
+				MimeBodyPart mbp4 = new MimeBodyPart();
+				MimeBodyPart mbp5 = new MimeBodyPart();
+
+				// attach the file to the message
+				FileDataSource fds3 = new FileDataSource(htmlPath);// for html file;
+				mbp5.setDataHandler(new DataHandler(fds3));
+				mbp5.setFileName(fds3.getName());
+				FileDataSource fds = new FileDataSource(folderPath);
+				mbp2.setDataHandler(new DataHandler(fds));
+				mbp2.setFileName(fds.getName());
+				FileDataSource fds1 = new FileDataSource(folderPaths);// for csv;
+				mbp3.setDataHandler(new DataHandler(fds1));
+				mbp3.setFileName(fds1.getName());
+				FileDataSource fds2 = new FileDataSource(zipPath);// for Zip file;
+				mbp4.setDataHandler(new DataHandler(fds2));
+				mbp4.setFileName(fds2.getName());*/
+				
+
+				// create the Multipart and add its parts to it
+				Multipart mp = new MimeMultipart();
+				//mp.addBodyPart(mbp5);
+				mp.addBodyPart(mbp1);
+				//mp.addBodyPart(mbp2);
+				//mp.addBodyPart(mbp3);
+				//mp.addBodyPart(mbp4);
+				
+
+				// add the Multipart to the message
+				msg.setContent(mp);
+				//log.info("Sending E-mail with Validation Result");
+
+			//Send the mail
+		Transport transport = session.getTransport("smtp");
+		transport.connect();
+		transport.sendMessage(msg,msg.getAllRecipients());
+		transport.close();
+		//log.warn ("mail sent sucesfully to : "+ issue.getCustomFieldValue( customField_email).toString())
+			/*Transport.send(msg);
+			/*if(intEmailFlag.equalsIgnoreCase("send"))				
+				Driver.setLogMsg("info", "Intermittent email succesfully sent to recepients");
+			else
+				Driver.setLogMsg("info", "Email succesfully sent to recepients");*/
