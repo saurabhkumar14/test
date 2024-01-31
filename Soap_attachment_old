@@ -1,0 +1,39 @@
+import java.nio.file.Files
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+def dataFolder =  new com.eviware.soapui.support.GroovyUtils(context).projectPath
+def d= new Date().format("dd-MMM-yyyy")
+def folderPath =  dataFolder+"/SoapUIResults_SIT_NEW/Request-Response/Request-Response_"+d
+String folderPaths =  dataFolder+"/SoapUIResults_SIT_NEW/Request-Response_ZIP/" ;
+
+ new File(folderPaths).mkdirs();
+// Create a File object for the specified path
+
+String inputDir = folderPath
+
+String zipFileName = folderPaths + '/Request-Response_' + d +'.zip'
+
+
+
+
+ZipOutputStream output = new ZipOutputStream(new FileOutputStream(zipFileName))
+
+
+new File(inputDir).eachFile() { file ->
+    if (!file.isFile()) {
+        return
+    }
+    println file.name.toString()
+    println file.toString()
+
+    output.putNextEntry(new ZipEntry(file.name.toString())) // Create the name of the entry in the ZIP
+
+    InputStream input = new FileInputStream(file);
+
+    // Stream the document data to the ZIP
+   Files.copy(input, output);
+   output.closeEntry(); // End of current document in ZIP
+   input.close()
+}
+output.close(); // End of all documents - ZIP is complete
+ 
