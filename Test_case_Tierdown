@@ -1,0 +1,3 @@
+//For sending data to HTML Report & CSV Report
+testRunner.testCase.testSuite.project.testSuites["Library"].testCases["Reporting_Utility"].testSteps["GenerateHTMLReport"].run(testRunner, context);
+testRunner.testCase.testSuite.project.testSuites["Library"].testCases["Reporting_Utility"].testSteps["GenerateCSVReport"].run(testRunner, context);
