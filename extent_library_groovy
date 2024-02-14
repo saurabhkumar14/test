@@ -1,0 +1,72 @@
+import com.aventstack.extentreports.markuputils.CodeLanguage;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
+import com.aventstack.extentreports.markuputils.ExtentColor;
+
+try {
+def testCase = testRunner.testCase.name;
+def testnode = context.report.createTest(testCase);
+def testAuthor = testRunner.testCase.getPropertyValue("author");
+def testCategory = testRunner.testCase.getPropertyValue("category");
+
+testnode.assignAuthor(testAuthor);
+testnode.assignCategory(testCategory);
+//testnode.assignAuthor("Saurabh Kumar").staus.("details");
+  for(stepResult in testRunner.getResults())
+  {
+   def testSuite = testRunner.testCase.testSuite.name;
+   def testStep = stepResult.getTestStep();
+   def testStepName = testStep.name
+   def type = testStep.config.type
+   def status = stepResult.getStatus()
+
+  
+   if(status.toString().equalsIgnoreCase("OK")){
+   	//testnode.pass(testStepName+" is passed");
+   	testnode.pass(MarkupHelper.createLabel(testStepName+" is passed", ExtentColor.GREEN));
+   	
+   }
+   if(status.toString().equalsIgnoreCase("Failed")){
+   	
+   	testnode.fail(MarkupHelper.createLabel(testStepName+" is failed", ExtentColor.RED));
+   	for(resMessage in stepResult.getMessages())
+   {
+     testnode.fail(MarkupHelper.createLabel(resMessage, ExtentColor.RED));
+   }
+   }
+  
+    if(type=="request")
+        {
+       def extRequest = testStep.getProperty("RawRequest").getValue();  
+       def extResponse = stepResult.getResponseContent(); 
+        def endpoint = testStep.getProperty("Endpoint").getValue();
+       //My try
+    testnode.info("<p><span style=\"color:#ffffff\"><span style=\"background-color:#3498db\"> Endpoint </span></span><strong> -&gt;&nbsp;<span style=\"color:#3498db\">"+endpoint+"</span></strong></p>");
+       
+       testnode.info("<h2><span style=\"font-size:14px\"><span style=\"font-family:Arial,Helvetica,sans-serif\"><span style=\"color:#ffffff\"><span style=\"background-color:#9b59b6\">&nbsp; &nbsp;Request&nbsp; &nbsp;</span></span></span></span></h2>");    
+	  testnode.info(MarkupHelper.createCodeBlock(extRequest, CodeLanguage.XML));
+	   testnode.info("<h2><span style=\"font-size:14px\"><span style=\"font-family:Arial,Helvetica,sans-serif\"><span style=\"color:#ffffff\"><span style=\"background-color:#9b59b6\">&nbsp; &nbsp;Response&nbsp; &nbsp;</span></span></span></span></h2>");
+	  testnode.info(MarkupHelper.createCodeBlock(extResponse, CodeLanguage.XML));
+        }
+    if(type=="restrequest"){
+    	  def extRequest = testStep.getProperty("RawRequest").getValue();  
+       def extResponse = stepResult.getResponseContent(); 
+    
+       String therequestUri = new String(context.getProperty("requestUri").toString());
+       testnode.info therequestUri;
+       if(extRequest.length()> 0){
+       testnode.info("<h2><span style=\"font-size:14px\"><span style=\"font-family:Arial,Helvetica,sans-serif\"><span style=\"color:#ffffff\"><span style=\"background-color:#9b59b6\">&nbsp; &nbsp;Request&nbsp; &nbsp;</span></span></span></span></h2>");    
+	  testnode.info(MarkupHelper.createCodeBlock(extRequest, CodeLanguage.JSON));
+       }
+	  testnode.info("<h2><span style=\"font-size:14px\"><span style=\"font-family:Arial,Helvetica,sans-serif\"><span style=\"color:#ffffff\"><span style=\"background-color:#9b59b6\">&nbsp; &nbsp;Response&nbsp; &nbsp;</span></span></span></span></h2>");
+	  testnode.info(MarkupHelper.createCodeBlock(extResponse, CodeLanguage.JSON));
+    }
+testnode.assignAuthor("Saurabh Kumar").assignCategory(testSuite).staus.("details");
+     
+   }
+//testnode.assignAuthor("Saurabh Kumar").assignDevice(testSuite)staus.("details");
+//testnode.assignDevice("testSuite").staus.("details");
+ }
+catch(exc)
+{
+   log.error("Exception happened: " + exc.toString());
+}
